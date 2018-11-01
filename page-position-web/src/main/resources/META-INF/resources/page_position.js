@@ -105,7 +105,7 @@
 	  		data: data,
 	  		success: function() {
 	  			console.log('success');
-				Liferay.SPA.app.reloadPage();
+	  			Liferay.SPA.app.navigate(document.location.href);
 	  		},
 	  	}).fail(function(response) {
 	  		console.log('fail: ' + response.getResponseHeader('X-Error-Message'));
