@@ -20,3 +20,12 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+.project
+.gradle/workspace-id.txt
+.gradle/workspace-id.txt.lock
+.gradle/4.1
+.gradle/4.8.1
+.gradle/buildOutputCleanup
+.gradle/vcsWorkingDirs
+page-position-web/bin
+.classpath

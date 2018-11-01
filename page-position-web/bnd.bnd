@@ -1,0 +1,4 @@
+Bundle-Name: Page Position Web
+Bundle-SymbolicName: com.slemarchand.page.position.web
+Bundle-Version: 1.0.0
+Web-ContextPath: /page_position
