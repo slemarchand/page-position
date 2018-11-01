@@ -8,15 +8,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.log.LogService;
 
 import com.liferay.portal.kernel.exception.LayoutParentLayoutIdException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.LayoutService;
 import com.liferay.portal.kernel.struts.BaseStrutsAction;
 import com.liferay.portal.kernel.struts.StrutsAction;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.petra.string.StringPool;
 
 
 @Component(
@@ -31,8 +34,10 @@ public class PagePositionEditAction extends BaseStrutsAction {
 
 		long plid = ParamUtil.getLong(request, "plid", 0);
 		long parentPlid = ParamUtil.getLong(request, "parentPlid", 0);
-		int priority = ParamUtil.getInteger(request, "priority", 0);
 		long siblingPlid = ParamUtil.getLong(request, "siblingPlid", 0);
+		int priority = ParamUtil.getInteger(request, "priority", 0);
+		
+		logParameters(plid, priority, parentPlid, siblingPlid);
 		
 		try {
 			if(siblingPlid > 0) {
@@ -44,13 +49,13 @@ public class PagePositionEditAction extends BaseStrutsAction {
 			
 		} catch (LayoutParentLayoutIdException e) {	
 			
-			log.log(LogService.LOG_DEBUG, e.getMessage(), e);
+			log.debug(e.getMessage(), e);
 			
 			sendError(response, HttpServletResponse. SC_FORBIDDEN, getMessage(e));
 			
 		} catch (PortalException e) {
 			
-			log.log(LogService.LOG_ERROR, e.getMessage(), e);
+			log.error(e.getMessage(), e);
 			
 			sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
@@ -58,6 +63,27 @@ public class PagePositionEditAction extends BaseStrutsAction {
 		return null;
 	}
 		
+	private void logParameters(long plid, int priority, long parentPlid, long siblingPlid) {
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("edited layout: %s, new priority: %s, new parent: %s, new sibling: %s",
+					getLayoutInfos(plid), priority, getLayoutInfos(parentPlid), getLayoutInfos(siblingPlid)));
+		}
+	}
+
+	private String getLayoutInfos(long plid) {
+		
+		String infos = StringPool.BLANK;
+		
+		Layout l = layoutLocalService.fetchLayout(plid);
+
+		if(l != null) {
+			String languageId = l.getDefaultLanguageId();
+			infos = String.format("{plid: %s, name: '%s', priority: %s}", l.getPlid(), l.getName(languageId), l.getPriority());
+		}
+		
+		return infos;
+	}
+
 	private void sendError(HttpServletResponse response, int status, String message) throws IOException {
 		response.addHeader("X-Error-Message", message);
 		response.sendError(status, message);
@@ -90,8 +116,7 @@ public class PagePositionEditAction extends BaseStrutsAction {
 		return message;
 	}
 
-	@Reference
-	private LogService log;
+	private Log log = LogFactoryUtil.getLog(PagePositionEditAction.class);
 	
 	@Reference
 	private LayoutService layoutService;

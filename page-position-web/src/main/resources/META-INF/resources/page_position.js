@@ -74,7 +74,7 @@
 	  	
 		var targetPlid = getPlid(event.currentTarget);
 	
-		var targetPriority = getPriority(event.currentTarget); // TODO
+		var targetPriority = getPriority(event.currentTarget);
 	
 		if(plid === targetPlid ) {
 			return;
@@ -153,15 +153,14 @@
 	
 	function getPriority(element) {
 		
-		$items = $('#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm .layout-columns.row ul li.list-group-item');
-	
-		return $items.index(element)
+		return $(element).parent().find('> li').index(element);
 	}
 	
 	function getDragOverPosition(event) {
 		var height = event.currentTarget.clientHeight; 
-		var topY = height / 6;
-		var bottomY = height - (height / 6);
+		var ratio = 1.0 / 6.0;
+		var topY = height * ratio;
+		var bottomY = height - (height * ratio);
 		if(event.offsetY < topY) { 
 			p = 'top';
 		} else if(event.offsetY > bottomY){

@@ -11,9 +11,13 @@ import javax.portlet.filter.PortletFilter;
 import javax.portlet.filter.RenderFilter;
 import javax.portlet.filter.RenderResponseWrapper;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 @Component(
 	immediate = true, 
@@ -34,7 +38,7 @@ public class GroupPagesRenderFilter implements RenderFilter {
 		String html = renderResponseWrapper.toString();
 
 		if (html != null) {
-			html = html + " <script src=\"/o/page_position/page_position.js?t=1541027832627\" type=\"text/javascript\"></script> ";
+			html = html + " <script src=\"/o/page_position/page_position.js?t=" + getTimestamp() + "\" type=\"text/javascript\"></script> ";
 		} else {
 			html = StringPool.BLANK;
 		}
@@ -42,12 +46,23 @@ public class GroupPagesRenderFilter implements RenderFilter {
 		response.getWriter().write(html);
 	}
 	
+	private String getTimestamp() {
+		
+		Bundle bundle = FrameworkUtil.getBundle(GroupPagesRenderFilter.class).getBundleContext().getBundle();
+		
+		long t = bundle.getLastModified();
+		
+		return Long.toString(t);
+	}
+
 	@Override
 	public void init(FilterConfig filterConfig) throws PortletException {
+		log.info("Init Page Position Web (https://github.com/slemarchand/page-position)");
 	}
 
 	@Override
 	public void destroy() {
 	}
 
+	private Log log = LogFactoryUtil.getLog(GroupPagesRenderFilter.class);
 }
