@@ -15,11 +15,11 @@
 			$e.attr('draggable', true);
 		});
 	
-		$columnsRow.on( "dragstart", "ul li.list-group-item", onDragStart);
+		$items.on( "dragstart", null, onDragStart);
 	
-		$columnsRow.on( "dragover", "ul li.list-group-item", onDragOver);
+		$items.on( "dragover", null, onDragOver);
 	
-		$columnsRow.on( "drop", "ul li.list-group-item", onDrop);
+		$items.on( "drop", null, onDrop);
 	
 		addStyleTag();
 	}
