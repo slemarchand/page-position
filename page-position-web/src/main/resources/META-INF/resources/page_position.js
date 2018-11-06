@@ -1,5 +1,7 @@
 (function() {
 	function init() {
+		
+		console.log('page_position.js::init()');
 	
 		var $columnsRow = $('#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm .layout-columns.row');
 	
@@ -15,11 +17,13 @@
 			$e.attr('draggable', true);
 		});
 	
-		$items.on( "dragstart", null, onDragStart);
+		$items.on("dragstart", null, onDragStart);
 	
-		$items.on( "dragover", null, onDragOver);
+		$items.on("dragover", null, onDragOver);
 	
-		$items.on( "drop", null, onDrop);
+		$items.on("drop", null, onDrop);
+		
+		$items.on( "dragleave", null, resetCssClasses);
 	
 		addStyleTag();
 	}
@@ -41,13 +45,13 @@
 	   var dataTransfer = event.originalEvent.dataTransfer;
 	
 	   dataTransfer.setData("plid", plid);
+	   
+	   window.__page_position__last_dragged_element = event.currentTarget;
 	}
 	
 	function onDragOver(event) {
-	
-		var $target = $(event.currentTarget);
 		
-		if(getPlid($target) > 0) {
+		if(isValidDropTarget(event.currentTarget)) {
 			
 			event.originalEvent.preventDefault();
 		
@@ -55,6 +59,8 @@
 		
 			var cssClass = 'dragover-' + position;
 		
+			var $target = $(event.currentTarget);
+			
 			if(!$target.hasClass(cssClass)) {
 				resetCssClasses();
 				$target.addClass(cssClass);
@@ -98,8 +104,6 @@
 			data.priority = 0;
 		}
 	
-	  	console.log(data);
-	  	
 	  	$.post({
 	  		url: '/c/portal/page_position/edit',
 	  		data: data,
@@ -111,6 +115,24 @@
 	  		console.log('fail: ' + response.getResponseHeader('X-Error-Message'));
   			resetCssClasses();
   		});	
+	}
+	
+	function isValidDropTarget(target) {
+		
+		var valid = false;
+		
+		var targetPlid = getPlid(target);
+		
+		if(targetPlid > 0) {
+		
+			var dragged = window.__page_position__last_dragged_element;
+		
+			var draggedPlid = getPlid(dragged);
+			
+			var valid = targetPlid !== draggedPlid;	
+		}
+		
+		return valid;
 	}
 	
 	function resetCssClasses() {
@@ -146,8 +168,6 @@
 			.find('a.dropdown-item[href*="GroupPagesPortlet_mvcRenderCommandName=%2Flayout%2Fedit_layout"]')
 			.attr('href');
 	
-	 	console.log(href); 	
-	
 	   return href;
 	}
 	
@@ -172,9 +192,7 @@
 		return p;
 	}
 	
-	$(function() {
-		window.setTimeout(function() {
-			init();
-		}, 1000);
+	AUI().ready(function(A) {
+		$(init);
 	});
 })();
