@@ -1,11 +1,23 @@
-#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm .dragover-top {
-	border-top: 5px solid blue;
+#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm li.list-group-item.list-group-item-flex.dragover-top {
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+	border-top: 0.3rem solid blue;
+	padding-top: 0.8rem;
 }
 
 #_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm .dragover-middle > div.flex-col-expand {
-	border: 5px solid blue;
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+	border: 0.2rem solid blue;
+	margin: -0.2rem -0.2rem -0.2rem -0.2rem; 
 }
 
-#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm .dragover-bottom {
-	border-bottom: 5px solid blue;
+#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm li.list-group-item.list-group-item-flex.dragover-bottom {
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+	border-bottom: 0.3rem solid blue;
+	padding-top: 0.8rem;
 }
