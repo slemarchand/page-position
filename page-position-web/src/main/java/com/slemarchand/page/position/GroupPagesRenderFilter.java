@@ -1,6 +1,7 @@
 package com.slemarchand.page.position;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -18,6 +19,8 @@ import org.osgi.service.component.annotations.Component;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 
 @Component(
 	immediate = true, 
@@ -27,6 +30,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 )
 public class GroupPagesRenderFilter implements RenderFilter {
 
+	private static final boolean ALWAYS_RELOAD_RESOURCES = GetterUtil.getBoolean(PropsUtil.get("page.position.always.reload.resources"), false);
+	
 	@Override
 	public void doFilter(RenderRequest request, RenderResponse response, FilterChain chain)
 			throws IOException, PortletException {
@@ -50,14 +55,20 @@ public class GroupPagesRenderFilter implements RenderFilter {
 		
 		Bundle bundle = FrameworkUtil.getBundle(GroupPagesRenderFilter.class).getBundleContext().getBundle();
 		
-		long t = bundle.getLastModified();
+		long t;
+		
+		if(ALWAYS_RELOAD_RESOURCES) {
+			t = new Date().getTime();
+		} else {
+			t = bundle.getLastModified();
+		}
 		
 		return Long.toString(t);
 	}
 
 	@Override
 	public void init(FilterConfig filterConfig) throws PortletException {
-		log.info("Init Page Position Web (https://github.com/slemarchand/page-position)");
+		log.info("Initialize Page Position Web (https://github.com/slemarchand/page-position)");
 	}
 
 	@Override
