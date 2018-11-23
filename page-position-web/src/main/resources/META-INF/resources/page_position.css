@@ -6,7 +6,8 @@
 	padding-top: 0.8rem;
 }
 
-#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm .dragover-middle > div.flex-col-expand {
+#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm .dragover-middle > div.flex-col-expand,
+#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm .breadcrumb-item.dragover-middle {
 	box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;	

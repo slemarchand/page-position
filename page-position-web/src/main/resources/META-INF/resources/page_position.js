@@ -25,6 +25,14 @@
 	
 		$items.on("drop", null, onDrop);
 		
+		var $breadcrumbItems = $('#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm li.breadcrumb-item');
+		
+		$breadcrumbItems.on("dragover", null, onDragOver);
+		
+		$breadcrumbItems.on("dragleave", null, onDragLeave);
+		
+		$breadcrumbItems.on("drop", null, onDrop);
+		
 		addStyleTag();
 	}
 	
@@ -70,6 +78,10 @@
 		
 			var $target = get$ItemElement(event.currentTarget);
 			
+			console.log(cssClass);
+			console.log(event.currentTarget);
+			console.log($target);
+
 			if(!$target.hasClass(cssClass)) {
 				resetCssClasses();
 				$target.addClass(cssClass);
@@ -179,7 +191,9 @@
 	
 	function resetCssClasses() {
 	
-		$items = $('#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm .layout-columns.row ul li.list-group-item');
+		$items = $(
+				'#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm .layout-columns.row ul li.list-group-item, ' +
+				'#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm ol.breadcrumb li.breadcrumb-item');
 	
 		$items.removeClass('dragover-top');
 		$items.removeClass('dragover-middle');
@@ -208,13 +222,23 @@
 		
 		var $e = $(element);
 		
-		var href = $e
+		if($e.hasClass('breadcrumb-item')) {
+			var $a = $e.find('a');
+			if($a.length > 0) {
+				var href = $a.attr('href');
+			} else if($e.parent().find('.breadcrumb-item').last()[0] === $e[0]) {
+				var $lastActiveItem = $('#_com_liferay_layout_admin_web_portlet_GroupPagesPortlet_fm .layout-columns.row ul li.list-group-item.active-item').last()[0];
+				return getHref($lastActiveItem);
+			}
+		} else {	
+			var href = $e
 				.find('a.dropdown-item[href*="GroupPagesPortlet_mvcRenderCommandName=%2Flayout%2Fedit_layout"]')
 				.attr('href');
-		
+		}
+
 		return href;
 	}
-	
+
 	function getPriority(element) {
 		
 		return get$ItemElement(element).parent().find('> li').index(element);
@@ -227,15 +251,15 @@
 	
 	function get$ItemElement(element) {
 		var $itemElement = $(element);
-		
-		if(!$itemElement.hasClass('list-group-item')) {
-			$itemElement = $itemElement.parent('.list-group-item');
-		}
-		
+				
 		return  $itemElement;
 	}
 	
 	function getDragOverPosition(event) {
+		
+		if($(event.currentTarget).hasClass('breadcrumb-item')) {
+			return 'middle';
+		}
 		
 		var height = event.currentTarget.clientHeight; 
 		var ratio = 1.0 / 4.0;
