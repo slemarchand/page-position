@@ -87,15 +87,7 @@
 	
 	function onDragLeave(event) {
 		
-		console.log('page_position.js::onDragLeave()');
-		
-		window.__page_position__position = getDragOverPosition(event);
-		
-		window.__page_position__targetPlid = getPlid(event.currentTarget);
-	
-		window.__page_position__targetPriority = getPriority(event.currentTarget);	
-		
-		window.__page_position__targetColumnIndex = getColumnIndex(event.currentTarget);	
+		console.log('page_position.js::onDragLeave()');	
 		
 		resetCssClasses();
 	}
@@ -105,14 +97,14 @@
 		console.log('page_position.js::onDrop()');
 		
 		event.originalEvent.preventDefault();
+				
+		var position = getDragOverPosition(event);
 		
-		var position = window.__page_position__position;
+		var targetPlid = getPlid(event.currentTarget);
 		
-		var targetPlid = window.__page_position__targetPlid;
-	
-		var targetPriority = window.__page_position__targetPriority;
+		var targetPriority = getPriority(event.currentTarget);
 		
-		var targetColumnIndex = window.__page_position__targetColumnIndex;
+		var targetColumnIndex = getColumnIndex(event.currentTarget);
 		
 		var sourcePlid = event.originalEvent.dataTransfer.getData("plid");
 		
