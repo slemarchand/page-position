@@ -77,10 +77,6 @@
 			var cssClass = 'dragover-' + position;
 		
 			var $target = get$ItemElement(event.currentTarget);
-			
-			console.log(cssClass);
-			console.log(event.currentTarget);
-			console.log($target);
 
 			if(!$target.hasClass(cssClass)) {
 				resetCssClasses();
